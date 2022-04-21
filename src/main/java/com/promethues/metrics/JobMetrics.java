@@ -1,7 +1,6 @@
 package com.promethues.metrics;
 
 import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.MeterBinder;
 import org.springframework.stereotype.Component;
@@ -30,10 +29,10 @@ public class JobMetrics implements MeterBinder {
                 .tags(new String[]{"name", "tag_job_counter2"})
                 .description("description-Job counter2 execute count ").register(meterRegistry);
 
-        Gauge.builder("gauge_builder_job_gauge", map, x -> x.get("x"))
-                .tags("name", "tag_job_gauge")
-                .description("description-Job gauge")
-                .register(meterRegistry);
+//        Gauge.builder("gauge_builder_job_gauge", map, x -> x.get("x"))
+//                .tags("name", "tag_job_gauge")
+//                .description("description-Job gauge")
+//                .register(meterRegistry);
     }
 
 }

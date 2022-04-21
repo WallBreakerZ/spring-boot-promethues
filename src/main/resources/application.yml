@@ -2,12 +2,21 @@ spring:
   application:
     name: springbootPrometheusGrafana
 
+#  默认情况下，使用端点的ID通过HTTP在/actuator路径下公开端点。例如，bean端点暴露在/ actuator /
 management:
+  server:
+    port: 9090 # 监控服务对外暴露的端口，不配置，则默认与rest同端口
   endpoints:
     web:
       exposure:
-        include:  '*'
-      base-path: "/actuator"
+        ## 将Prometheus指标暴露出去
+        include: 'prometheus'
+      ## 设置暴露的路径前缀，/ 表示无； 将/actuator/prometheus重映射到 /prometheus：
+      base-path: /
+      path-mapping:
+        prometheus: metrics #这里将 prometheus 映射为自定义路径，
+        # 此时 prometheus 中的配置为 http://192.168.0.106:9090/metrics
+        # 原本为 http://192.168.0.106:8080/actuator/prometheus
   metrics:
     tags:
       application: ${spring.application.name}

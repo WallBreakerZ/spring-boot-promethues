@@ -1,6 +1,6 @@
 package com.promethues.rest;
 
-import com.promethues.annotation.TimeCount;
+import com.promethues.annotation.TimeConsuming;
 import com.promethues.metrics.JobMetrics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,18 +29,39 @@ public class CounterController {
         jobMetrics.map.put("x", Double.valueOf(x));
     }
 
-    @RequestMapping(value = "/cost", method = RequestMethod.GET)
-    public void cost(@RequestParam(value = "x") String x) {
+    @RequestMapping(value = "/cost1", method = RequestMethod.GET)
+    @TimeConsuming("cost1")
+    public int cost() {
         try {
-            method();
+            test();
+            method(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return 1;
     }
 
-    @TimeCount
-    private void method() throws InterruptedException {
-        Thread.sleep(5000);
+    @RequestMapping(value = "/cost2", method = RequestMethod.GET)
+//    @TimeConsuming("cost2")
+    public int cost2() {
+        try {
+            test();
+            method(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    private void method(int i) throws InterruptedException {
+        double l = Math.random() * i * 0.01;
+        System.out.println("睡" + l * 10 + "秒");
+        Thread.sleep((long) (l * 1000));
+    }
+
+    @TimeConsuming("test")
+    public void test() throws InterruptedException {
+        Thread.sleep(10);
     }
 }
 
