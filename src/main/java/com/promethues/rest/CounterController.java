@@ -1,5 +1,6 @@
 package com.promethues.rest;
 
+import com.promethues.annotation.TimeCount;
 import com.promethues.metrics.JobMetrics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,18 +13,34 @@ public class CounterController {
     @Autowired
     private JobMetrics jobMetrics;
 
-    @RequestMapping(value = "/counter1", method= RequestMethod.GET)
+    @RequestMapping(value = "/counter1", method = RequestMethod.GET)
     public void counter1() {
         jobMetrics.job2Counter.increment();
     }
 
-    @RequestMapping(value = "/counter2", method= RequestMethod.GET)
+    @RequestMapping(value = "/counter2", method = RequestMethod.GET)
     public void counter2() {
         jobMetrics.job2Counter.increment();
     }
-    @RequestMapping(value = "/gauge", method= RequestMethod.GET)
+
+    @RequestMapping(value = "/gauge", method = RequestMethod.GET)
     public void gauge(@RequestParam(value = "x") String x) {
-        System.out.println("gauge controller x"+x);
-        jobMetrics.map.put("x",Double.valueOf(x));
+        System.out.println("gauge controller x" + x);
+        jobMetrics.map.put("x", Double.valueOf(x));
+    }
+
+    @RequestMapping(value = "/cost", method = RequestMethod.GET)
+    public void cost(@RequestParam(value = "x") String x) {
+        try {
+            method();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TimeCount
+    private void method() throws InterruptedException {
+        Thread.sleep(5000);
     }
 }
+
